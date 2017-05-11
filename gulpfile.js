@@ -2,11 +2,16 @@ var gulp = require('gulp');
 var browserSync = require('browser-sync').create();
 var sass = require('gulp-sass');
 var jade = require('gulp-jade');
+var autoprefixer = require('gulp-autoprefixer');
 var data = require('gulp-data');
 var fs = require('fs');
 
 // load env vars from .env
 require('dotenv').load();
+
+var autoprefixerOptions = {
+  browsers: ['last 2 versions', '> 5%', 'Firefox ESR']
+};
 
 function loadJson(file, cb) {
   fs.readFile('./src/data.json', 'utf8', function(errRead, data) {
@@ -35,6 +40,7 @@ gulp.task('serve', ['sass', 'jade'], function() {
 gulp.task('sass', function() {
   return gulp.src("src/sass/main.sass")
     .pipe(sass())
+    .pipe(autoprefixer(autoprefixerOptions))
     .pipe(gulp.dest("public/css"))
     .pipe(browserSync.stream());
 });
